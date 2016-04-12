@@ -60,27 +60,31 @@ public class ManipulaBanco {
 	*/
 	
 	//Acionado ao clicar no botao adicionar na tela de cadastro
-		public void insereCompetidor(){
+	public void insereCompetidor(){
 			System.out.println("Fue!");
 			
-		}
+	}
+	
+	public void cadastraProva(){
+		System.out.println("Fue!");
+	}
 	
 	public void cadastraSerie(){
-		
+		System.out.println("Fue!");
 	}
 	
 	public void computaSerie(){
-		
+		System.out.println("Fue!");
 	}
 	
 	//TODO não é void
 	public void consutaCompetidor(){
-		
+		System.out.println("Fue!");
 	}
 	
 	//TODO não é void
 	public void consultaTop3(){
-		
+		System.out.println("Fue!");
 	}
 
 }

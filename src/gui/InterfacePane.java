@@ -7,9 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javafx.scene.shape.Line;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,17 +17,17 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-
 import com.sun.javafx.geom.Line2D;
-
 
 
 public class InterfacePane extends JPanel {
 	
 	private JButton    btCompetidor;//mostra tabela com cadastrados.pode editar(?)
 	private JButton    btEspectador;
+	private JButton    btCadastraSerie;
 	private JLabel     areaCompetidorEspectador;
-	private cadastraCompetidorDialog cadastraInfoDialog = new cadastraCompetidorDialog();
+	private JLabel     areaAdmin;
+	private CadastraCompetidorProvaDialog cadastraInfoDialog = new CadastraCompetidorProvaDialog();
 	private ListaInfoCompetidoresDialog listaInfoDialog = new ListaInfoCompetidoresDialog();
 	
 	
@@ -74,6 +72,15 @@ public class InterfacePane extends JPanel {
 		areaCompetidorEspectador = new JLabel("Area de Competidores/Espectadores");
 		areaCompetidorEspectador.setBounds(80, 100, 250, 30);
 		this.add(areaCompetidorEspectador);
+		
+		areaAdmin = new JLabel("Area de Competidores/Espectadores");
+		areaAdmin.setBounds(800, 100, 250, 30);
+		this.add(areaAdmin);
+		
+		btCadastraSerie = new JButton("Cadastrar Series");
+		btCadastraSerie.addActionListener(btCadastraSerieListener);
+		btCadastraSerie.setBounds(800, 350, 145, 30);
+		this.add(btCadastraSerie);
 		
 		
 		/*
@@ -156,9 +163,8 @@ public class InterfacePane extends JPanel {
 	}
 	
 	public void paintComponent(Graphics g) {
-        super.paintComponent(g);  // fixes the immediate problem.
+        super.paintComponent(g);  
         Graphics2D g2 = (Graphics2D) g;
-        //Line2D lin = new Line2D(20, 40, 850, 40);
         g2.drawLine(700, 0, 700, 800);//x1,y1,x2,y2
     }
 	
@@ -172,7 +178,7 @@ public class InterfacePane extends JPanel {
 			//cp.setVisible(true);
 			if(cadastraInfoDialog == null)
 			{
-				cadastraInfoDialog = new cadastraCompetidorDialog();
+				cadastraInfoDialog = new CadastraCompetidorProvaDialog();
 			}
 			
 			cadastraInfoDialog.setLocationRelativeTo(InterfacePane.this);
@@ -198,16 +204,17 @@ public class InterfacePane extends JPanel {
 		}
 	};
 
-/*	
-private ActionListener btTop3Listener = new ActionListener(){
+	
+    private ActionListener btCadastraSerieListener = new ActionListener(){
 		
 		@Override
 		public void actionPerformed(ActionEvent e){
 			//System.out.println("Foi Ka!");
-		}
+			//TODO Abrir janela para cadastrar series, podendo escolher entre eliminatorias,semi e final
+ 		}
 						
 	};
-*/
+
 
 	
 }
