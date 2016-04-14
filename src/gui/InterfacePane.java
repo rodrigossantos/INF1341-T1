@@ -29,7 +29,7 @@ public class InterfacePane extends JPanel {
 	private JLabel     areaAdmin;
 	private CadastraCompetidorProvaDialog cadastraInfoDialog = new CadastraCompetidorProvaDialog();
 	private ListaInfoCompetidoresDialog listaInfoDialog = new ListaInfoCompetidoresDialog();
-	
+	private CadastraSerieDialog cadastraSerieDialog = new CadastraSerieDialog();
 	
 	/*
 	private JTextField insereNome;
@@ -81,7 +81,6 @@ public class InterfacePane extends JPanel {
 		btCadastraSerie.addActionListener(btCadastraSerieListener);
 		btCadastraSerie.setBounds(800, 350, 145, 30);
 		this.add(btCadastraSerie);
-		
 		
 		/*
 		insereNome = new JTextField();
@@ -158,8 +157,6 @@ public class InterfacePane extends JPanel {
 		*/
 		
 		
-		
-		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -209,8 +206,16 @@ public class InterfacePane extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e){
-			//System.out.println("Foi Ka!");
+			System.out.println("Foi Ka!");
 			//TODO Abrir janela para cadastrar series, podendo escolher entre eliminatorias,semi e final
+			
+			if(cadastraSerieDialog == null)
+			{
+				cadastraSerieDialog = new CadastraSerieDialog();
+			}
+			
+			cadastraSerieDialog.setLocationRelativeTo(InterfacePane.this);
+			cadastraSerieDialog.setVisible(true);
  		}
 						
 	};

@@ -11,15 +11,17 @@ import javax.swing.JTextField;
 
 import banco.ManipulaBanco;
 
+//TODO pensar em como inserir mais de uma prova por competidor
 public class CadastraProvaDialog extends JDialog {
 	
 	private JTextField insereModalidade;
 	private JTextField insereDistancia;
-	private JLabel     modalidade;
-	private JLabel     distancia;
+	private JLabel     nome;
+	private JLabel     idProva;
 	private JButton    btCadastraProva;
 	private JButton    btcadastraOutra;
 	private CadastraOutraDialog cadastraOutraDialog = new CadastraOutraDialog();
+	private CadastraProvaDialog cadastraProvaDialog;
 	static ManipulaBanco manipula = new ManipulaBanco();
 
 	public CadastraProvaDialog() {
@@ -30,17 +32,17 @@ public class CadastraProvaDialog extends JDialog {
 		insereModalidade.setBounds(120, 200, 170, 30);
 		this.add(insereModalidade);
 		
-		modalidade = new JLabel("Modalidade");
-		modalidade.setBounds(40, 200, 120, 30);
-		this.add(modalidade);
+		nome = new JLabel("Nome");
+		nome.setBounds(40, 200, 120, 30);
+		this.add(nome);
 		
 		insereDistancia = new JTextField();
 		insereDistancia.setBounds(120, 260, 170, 30);
 		this.add(insereDistancia);
 		
-		distancia = new JLabel("Distancia");
-		distancia.setBounds(40, 260, 120, 30);
-		this.add(distancia);
+		idProva = new JLabel("Id da Prova");
+		idProva.setBounds(40, 260, 120, 30);
+		this.add(idProva);
 		
 		btCadastraProva = new JButton("Cadastar");
 		btCadastraProva.setBounds(40, 460, 90, 30);
@@ -60,13 +62,17 @@ public class CadastraProvaDialog extends JDialog {
 		
 	}
 	
+	//Listener que cadastra provas do competidor ao clicar
     private ActionListener btCadastraProvaListener = new ActionListener(){
 		
 		@Override
 		public void actionPerformed(ActionEvent e){
 			System.out.println("Foi Ka!");
-			//TODO ao clicar no botao inserir os dados do competidor no banco
-			manipula.cadastraProva();
+			
+			//int dist = Integer.parseInt(idProva.getText());
+			//String mod = String.valueOf(nome);
+			//manipula.cadastraProva(mod,dist);
+	
 		}
 						
 	};
@@ -86,7 +92,7 @@ public class CadastraProvaDialog extends JDialog {
 			cadastraOutraDialog.setLocationRelativeTo(CadastraProvaDialog.this);
 			cadastraOutraDialog.setVisible(true);
 		}
-			//manipula.insereCompetidor();
+			
 		
 						
 	};

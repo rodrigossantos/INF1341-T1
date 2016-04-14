@@ -100,13 +100,21 @@ public class CadastraCompetidorDialog extends JDialog {
 		
 	}
 	
+	//Listener que cadastra dados do competidor no banco ao clicar
 	private ActionListener btCadastrarListener = new ActionListener(){
 		
 		@Override
 		public void actionPerformed(ActionEvent e){
 			System.out.println("Foi Ka!");
-			//TODO ao clicar no botao inserir os dados do competidor no banco
-			manipula.insereCompetidor();
+			/*
+			int anoNasc = Integer.parseInt(anoNascimento.getText());
+			String name = String.valueOf(nome);
+			String patr = String.valueOf(patrocinio);
+			String gender = String.valueOf(sexo);
+			*/
+			
+			//manipula.insereCompetidor(name, anoNasc,patr,gender);
+			
 		}
 						
 	};

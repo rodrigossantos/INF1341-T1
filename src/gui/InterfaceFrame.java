@@ -8,7 +8,7 @@ public class InterfaceFrame extends JFrame {
 	
 	public InterfaceFrame(String s) {
 		// TODO Auto-generated constructor stub
-		this.setTitle("Tela de Cadastro de Participantes");
+		this.setTitle("Tela Inicial");
 		getContentPane().add(p);
 		setSize(400,400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

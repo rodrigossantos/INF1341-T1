@@ -61,7 +61,7 @@ public class CadastraOutraDialog extends JDialog {
 		public void actionPerformed(ActionEvent e){
 			System.out.println("Foi Ka!");
 			//TODO ao clicar no botao inserir os dados do competidor no banco
-			manipula.cadastraProva();
+			//manipula.cadastraProva();
 		}
 						
 	};

@@ -3,6 +3,9 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,6 +20,10 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 	private JLabel	   competidor;
 	private JButton btListarTop3;
 	private JButton btListaCompetidor;
+	private ResultSetMetaData rsmd;
+	private ResultSetMetaData rsmd2;
+	private ResultSet resComp;
+	private ResultSet resTop3;
 	static ManipulaBanco manipula = new ManipulaBanco();
 	
 	public ListaInfoCompetidoresDialog() {
@@ -49,23 +56,61 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 	}
 	
     private ActionListener btLIstaCompetidorListener = new ActionListener(){
-		
+    	//TODO exibir os dados(console?, tabela?)
 		@Override
 		public void actionPerformed(ActionEvent e){
-			//TODO buscar dados do participante(todas as séries em que participou)
 			System.out.println("Foi Ka!");
-			manipula.consutaCompetidor();
+			/*
+			String comp = String.valueOf(competidor);
+			resComp = manipula.consultaCompetidor(comp);		
+			
+			try {
+				rsmd = resComp.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				int rowCount = 1;
+				while (resComp.next()) {
+					System.out.println("Row " + rowCount + ":  ");
+					for (int i = 1; i <= numberOfColumns; i++) {
+						System.out.print("   Column " + i + ":  ");
+						System.out.println(resComp.getString(i));
+					}
+					System.out.println("");
+					rowCount++;
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		*/	
 		}
 						
 	};
 	
 	 private ActionListener btTop3Listener = new ActionListener(){
-			
+			//TODO exibir os dados(console?, tabela?)
 			@Override
 			public void actionPerformed(ActionEvent e){
-				//TODO buscar os 3 melhores participantes
 				System.out.println("Foi Ka!");
-				manipula.consultaTop3();
+				//resTop3 = manipula.consultaTop3();
+				/*
+				try {
+					rsmd2 = resTop3.getMetaData();
+					int numberOfColumns = rsmd2.getColumnCount();
+					int rowCount = 1;
+					while (resTop3.next()) {
+						System.out.println("Row " + rowCount + ":  ");
+						for (int i = 1; i <= numberOfColumns; i++) {
+							System.out.print("   Column " + i + ":  ");
+							System.out.println(resTop3.getString(i));
+						}
+						System.out.println("");
+						rowCount++;
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			   */	
 			}
 							
 		};
