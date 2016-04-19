@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import banco.ManipulaBanco;
 
@@ -20,6 +21,7 @@ public class CadastraCompetidorProvaDialog extends JDialog{
 	private CadastraProvaDialog cadastraProvaDialog = new CadastraProvaDialog();
 		
 	static ManipulaBanco manipula = new ManipulaBanco();
+	
 
 	public CadastraCompetidorProvaDialog() {
 		
@@ -49,6 +51,13 @@ public class CadastraCompetidorProvaDialog extends JDialog{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			//System.out.println("Foi Ka!");
+			manipula.conectaBanco("jdbc:postgresql://localhost:5432/BD3","postgres","Seventeam4670");
+			try {
+				manipula.createProcedureShowTop3();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if(cadastraInfoDialog == null)
 			{
 				cadastraInfoDialog = new CadastraCompetidorDialog();

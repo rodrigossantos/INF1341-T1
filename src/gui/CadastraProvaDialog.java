@@ -14,8 +14,8 @@ import banco.ManipulaBanco;
 //TODO pensar em como inserir mais de uma prova por competidor
 public class CadastraProvaDialog extends JDialog {
 	
-	private JTextField insereModalidade;
-	private JTextField insereDistancia;
+	private JTextField insereNome;
+	private JTextField insereIdProva;
 	private JLabel     nome;
 	private JLabel     idProva;
 	private JButton    btCadastraProva;
@@ -28,17 +28,17 @@ public class CadastraProvaDialog extends JDialog {
 		
 		setLayout(null);
 		
-		insereModalidade = new JTextField();
-		insereModalidade.setBounds(120, 200, 170, 30);
-		this.add(insereModalidade);
+		insereNome = new JTextField();
+		insereNome.setBounds(120, 200, 170, 30);
+		this.add(insereNome);
 		
 		nome = new JLabel("Nome");
 		nome.setBounds(40, 200, 120, 30);
 		this.add(nome);
 		
-		insereDistancia = new JTextField();
-		insereDistancia.setBounds(120, 260, 170, 30);
-		this.add(insereDistancia);
+		insereIdProva = new JTextField();
+		insereIdProva.setBounds(120, 260, 170, 30);
+		this.add(insereIdProva);
 		
 		idProva = new JLabel("Id da Prova");
 		idProva.setBounds(40, 260, 120, 30);
@@ -51,7 +51,7 @@ public class CadastraProvaDialog extends JDialog {
 		
 		btcadastraOutra = new JButton("Cadastar outra prova");
 		btcadastraOutra.setBounds(150, 460, 160, 30);
-		btcadastraOutra.addActionListener(btCadastraOutraListener);
+		//btcadastraOutra.addActionListener(btCadastraOutraListener);
 		this.add(btcadastraOutra);
 		
 		this.setTitle("Tela de cadastro de provas");
@@ -69,14 +69,15 @@ public class CadastraProvaDialog extends JDialog {
 		public void actionPerformed(ActionEvent e){
 			System.out.println("Foi Ka!");
 			
-			//int dist = Integer.parseInt(idProva.getText());
-			//String mod = String.valueOf(nome);
-			//manipula.cadastraProva(mod,dist);
+			int id = Integer.parseInt(insereIdProva.getText());
+			String name = insereNome.getText();
+			manipula.conectaBanco("jdbc:postgresql://localhost:5432/BD3","postgres","Seventeam4670");
+			manipula.cadastraProva(name,id);
 	
 		}
 						
 	};
-	
+	/*
     private ActionListener btCadastraOutraListener = new ActionListener(){
 		
 		@Override
@@ -96,5 +97,6 @@ public class CadastraProvaDialog extends JDialog {
 		
 						
 	};
+	*/
 
 }

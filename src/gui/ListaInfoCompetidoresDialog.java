@@ -21,11 +21,11 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 	private JButton btListarTop3;
 	private JButton btListaCompetidor;
 	private ResultSetMetaData rsmd;
-	private ResultSetMetaData rsmd2;
+	private ResultSetMetaData rsmdcompetidor;
 	private ResultSet resComp;
 	private ResultSet resTop3;
 	static ManipulaBanco manipula = new ManipulaBanco();
-	
+	boolean consulta = true;
 	public ListaInfoCompetidoresDialog() {
 		
 		setLayout(null);
@@ -54,15 +54,16 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 		this.setResizable(false);	
 		this.pack();
 	}
-	
+	/*
     private ActionListener btLIstaCompetidorListener = new ActionListener(){
-    	//TODO exibir os dados(console?, tabela?)
+    	
 		@Override
 		public void actionPerformed(ActionEvent e){
-			System.out.println("Foi Ka!");
-			/*
-			String comp = String.valueOf(competidor);
-			resComp = manipula.consultaCompetidor(comp);		
+			
+			manipula.conectaBanco("jdbc:postgresql://localhost:5432/BD3","postgres","Seventeam4670");
+			String comp = String.valueOf(insereCompetidor);
+			//resComp = manipula.consultaCompetidor(comp);	
+			resComp = manipula.listaParticipante(comp);
 			
 			try {
 				rsmd = resComp.getMetaData();
@@ -81,7 +82,40 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		*/	
+		
+		}
+						
+	};
+	
+	*/
+	private ActionListener btLIstaCompetidorListener = new ActionListener(){
+    	//TODO exibir os dados(console?, tabela?)
+		@Override
+		public void actionPerformed(ActionEvent e){
+			System.out.println("Foi Ka!");
+			manipula.conectaBanco("jdbc:postgresql://localhost:5432/BD3","postgres","Seventeam4670");
+			int comp = Integer.parseInt(insereCompetidor.getText());
+			//resComp = manipula.consultaCompetidor(comp);	
+			resComp = manipula.listaParticipante2(comp);
+			
+			try {
+				rsmd = resComp.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				int rowCount = 1;
+				while (resComp.next()) {
+					System.out.println("Row " + rowCount + ":  ");
+					for (int i = 1; i <= numberOfColumns; i++) {
+						System.out.print("   Column " + i + ":  ");
+						System.out.println(resComp.getString(i));
+					}
+					System.out.println("");
+					rowCount++;
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
 		}
 						
 	};
@@ -91,13 +125,20 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				System.out.println("Foi Ka!");
-				//resTop3 = manipula.consultaTop3();
-				/*
+				manipula.conectaBanco("jdbc:postgresql://localhost:5432/BD3","postgres","Seventeam4670");
 				try {
-					rsmd2 = resTop3.getMetaData();
-					int numberOfColumns = rsmd2.getColumnCount();
+					resTop3 = manipula.listarTop3();
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+				try {
+					rsmdcompetidor = resTop3.getMetaData();
+					int numberOfColumns = rsmdcompetidor.getColumnCount();
 					int rowCount = 1;
 					while (resTop3.next()) {
+						consulta = false;
 						System.out.println("Row " + rowCount + ":  ");
 						for (int i = 1; i <= numberOfColumns; i++) {
 							System.out.print("   Column " + i + ":  ");
@@ -110,7 +151,7 @@ public class ListaInfoCompetidoresDialog extends JDialog {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			   */	
+			   
 			}
 							
 		};

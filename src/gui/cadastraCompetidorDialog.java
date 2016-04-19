@@ -65,6 +65,7 @@ public class CadastraCompetidorDialog extends JDialog {
 		sexo.setBounds(40, 280, 120, 30);
 		this.add(sexo);
 		
+		/*
 		insereModalidade = new JTextField();
 		insereModalidade.setBounds(120, 340, 170, 30);
 		this.add(insereModalidade);
@@ -80,6 +81,7 @@ public class CadastraCompetidorDialog extends JDialog {
 		distancia = new JLabel("Distancia");
 		distancia.setBounds(40, 400, 120, 30);
 		this.add(distancia);
+		*/
 		
 		btCadastrar = new JButton("Cadastar");
 		btCadastrar.setBounds(40, 460, 90, 30);
@@ -106,14 +108,16 @@ public class CadastraCompetidorDialog extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e){
 			System.out.println("Foi Ka!");
-			/*
-			int anoNasc = Integer.parseInt(anoNascimento.getText());
-			String name = String.valueOf(nome);
-			String patr = String.valueOf(patrocinio);
-			String gender = String.valueOf(sexo);
-			*/
 			
-			//manipula.insereCompetidor(name, anoNasc,patr,gender);
+			int anoNasc = Integer.parseInt(insereAnoNascimento.getText());
+			//String name = String.valueOf(insereNome);
+			String name = insereNome.getText();
+			String patr = inserePatrocinio.getText();
+			String gender = insereSexo.getText();
+			//char c[] = gender.toCharArray(); 
+			
+			manipula.conectaBanco("jdbc:postgresql://localhost:5432/BD3","postgres","Seventeam4670");
+			manipula.insereCompetidor(name, anoNasc,patr,gender);
 			
 		}
 						

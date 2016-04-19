@@ -1,15 +1,11 @@
 package banco;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+
+import java.sql.*;
 
 import javax.swing.JLabel;
+
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 public class ManipulaBanco {
 
@@ -18,32 +14,34 @@ public class ManipulaBanco {
 	private String senha;
 	private Connection con;
 	private String insereDados;
-	private Statement searchParticipante;
-	//private PreparedStatement searchParticipante;
+	//private Statement searchParticipante;
+	private PreparedStatement searchParticipante;
 	private PreparedStatement insertParticipante;
 	private PreparedStatement insertProvaParticipante;
 	private PreparedStatement insertSerie;
 	private PreparedStatement searchTop3;
-	private String     nome;
+	private String     name;
+	private int ident;
 	private int     anoNascimento;
 	private String     patrocinio;
 	private String     sexo;
 	private String     modalidade;
 	private int     distancia;
 	private ResultSet rs;
+	private ResultSet result;
 	private ResultSet rsTop3;
 	
-	String createProcedureExibeComp = "create procedure SHOW_COMPETIDOR " +
+	String createProcedureExibeComp = "create function SHOW_COMPETIDOR " +
 			"as " +
-			"select SERIE_PARTICIPANTE.NOME_PART, SERIE_PARTICIPANTE.DATA_HORA, SERIE.TIPO" +
-			"from SERIE_PARTICIPANTE , SERIE " +
-			"where SERIE_PARTICIPANTE.DATA_HORA = SERIE.DATA_HORA ";
+			"select SERIE_PARTICIPANTE.NOME_PARTIC_SP, SERIE_PARTICIPANTE.DATA_HORA_SP, SERIE.TIPO " +
+			"from SERIE_PARTICIPANTE, SERIE, participante_prova,PROVA " +
+			"where where SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA ";
 	
-	String createProcedureTop3 = "create procedure SHOW_TOP3" +
+	String createProcedureTop3 = "create function SHOW_TOP3" +
 	        "as "+
-			"select SERIE_PARTICIPANTE.NOME_PART, SERIE_PARTICIPANTE.DATA_HORA, SERIE_PARTICIPANTE.TEMPO " +
-	        "from SERIE_PARTICIPANTE " +
-			"where SERIE_PARTICIPANTE.DATA_HORA = SERIE.DATA_HORA AND SERIE_PARTICIPANTE.NOME_PART = PARTICIPANTE_PROVA.NOME_PART AND PARTICIPANTE_PROVA.ID_PROVA = PROVA.ID_PROVA " +
+			"select SERIE_PARTICIPANTE.NOME_PARTIC_SP, serie_participante.data_hora_sp, serie_participante.tempo " +
+	        "SERIE_PARTICIPANTE, SERIE, participante_prova,PROVA " +
+			"SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA AND SERIE_PARTICIPANTE.NOME_PARTIC_SP = PARTICIPANTE_PROVA.NOME_PARTIC_PP AND PARTICIPANTE_PROVA.ID_PROVA_PP = PROVA.ID_PROVA " +	       
 	        "order_by TEMPO";
 	
 	public ManipulaBanco() {
@@ -75,77 +73,249 @@ public class ManipulaBanco {
 		
 	}
 	
-	/*
-	public void encerraConexão() throws SQLException{
-		stmt.close();
-		con.close();
-	}
-	*/
-	
-	//Acionado ao clicar no botao adicionar na tela de cadastro
-	/*
-	public void insereCompetidor(String nome, int anoNasc, String patrocinio, String sexo,String modalidade, int distancia){
-		System.out.println("Fue!");
+	public void createProcedureShowTop3() throws SQLException {
+
+		con = DriverManager.getConnection(
+				"jdbc:postgresql://localhost:5432/BD3", "postgres",
+				"Seventeam4670");
+
+		// String createProcedure = null;
+		// String queryDrop = "DROP PROCEDURE IF EXISTS SHOW_TOP3";
+
+		String createProcedureTop3 = "create procedure show_top3 "
+				+ "as "
+				+ "select SERIE_PARTICIPANTE.NOME_PARTIC_SP, serie_participante.data_hora_sp, serie_participante.tempo "
+				+ "from SERIE_PARTICIPANTE, SERIE, participante_prova,PROVA "
+				+ "where SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA AND SERIE_PARTICIPANTE.NOME_PARTIC_SP = PARTICIPANTE_PROVA.NOME_PARTIC_PP AND PARTICIPANTE_PROVA.ID_PROVA_PP = PROVA.ID_PROVA "
+				+ "order_by TEMPO";
 		
-	}
-	*/
-	
-	//Acionado ao clicar no botao adicionar na tela de cadastro
-	public void insereCompetidor(String nome, int anoNasc, String patrocinio, String sexo){
-			System.out.println("Fue!");
-			try{
-					
-				insertParticipante = con.prepareStatement("INSERT INTO PARTICIPANTE VALUES(?,?,?,?)");
-				insertParticipante.setString(1, nome);
-				insertParticipante.setInt(2, anoNasc);
-				insertParticipante.setString(3, sexo);
-				insertParticipante.setString(4, patrocinio);
-							 
-				insertParticipante.close();
+		
+
+		Statement stmt = null;
+		// Statement stmtDrop = null;
+
+		/*
+		 * try { System.out.println("Calling DROP PROCEDURE"); stmtDrop =
+		 * con.createStatement(); stmtDrop.execute(queryDrop); } catch
+		 * (SQLException ex) { System.err.println("SQLException: " +
+		 * ex.getMessage()); } finally { if (stmtDrop != null) {
+		 * stmtDrop.close(); } }
+		 */
+
+		try {
+			stmt = con.createStatement();
+			stmt.executeUpdate(createProcedureTop3);
+		} catch (SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		} finally {
+			if (stmt != null) {
+				stmt.close();
 				con.close();
-				
-				/*	
-				insertParticipante = con.createStatement();	
-				insertParticipante.executeUpdate("INSERT INTO PARTICIPANTE VALUES(1031,'Chevrolet','Chevette','92',7200.00,'EUA')");
-				insertParticipante.executeUpdate("INSERT INTO PARTICIPANTE VALUES(1031,'Citroen','Ax','95',25000.00,'Franca')");
-				insertParticipante.executeUpdate("INSERT INTO PARTICIPANTE VALUES(1022, 'Ford', 'Del Rey', '85', 4800.00, 'EUA')");
-				insertParticipante.executeUpdate("INSERT INTO PARTICIPANTE VALUES(1050, 'Chevrolet', 'Chevette', '93', 7900.00,'EUA')");
-				*/
-				
-			} catch (SQLException ex) {
-				System.err.println("SQLException: " + ex.getMessage());
 			}
-			
-			
+		}
 	}
 	
-	public void cadastraProva(String nome, int id){
+	public void createProcedureShowCompetidor() throws SQLException {
+
+		con = DriverManager.getConnection(
+				"jdbc:postgresql://localhost:5432/BD3", "postgres",
+				"Seventeam4670");
+
+		// String createProcedure = null;
+		// String queryDrop = "DROP PROCEDURE IF EXISTS SHOW_TOP3";
+
+		String createProcedureExibeComp = "create procedure SHOW_COMPETIDOR "
+				+ "as "
+				+ "select SERIE_PARTICIPANTE.NOME_PARTIC_SP, SERIE_PARTICIPANTE.DATA_HORA_SP, SERIE.TIPO "
+				+ "from SERIE_PARTICIPANTE, SERIE, participante_prova,PROVA "
+				+ "where SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA AND PARTICIPANTE_PROVA.NOME_PARTIC_PP = ?";
+				
+
+		Statement stmt = null;
+		// Statement stmtDrop = null;
+
+		/*
+		 * try { System.out.println("Calling DROP PROCEDURE"); stmtDrop =
+		 * con.createStatement(); stmtDrop.execute(queryDrop); } catch
+		 * (SQLException ex) { System.err.println("SQLException: " +
+		 * ex.getMessage()); } finally { if (stmtDrop != null) {
+		 * stmtDrop.close(); } }
+		 */
+
+		try {
+			stmt = con.createStatement();
+			stmt.executeUpdate(createProcedureExibeComp);
+		} catch (SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+				con.close();
+			}
+		}
+
+	}
+	
+	
+	// Acionado ao clicar no botao adicionar na tela de cadastro
+	public void insereCompetidor(String nome, int anoNasc, String patrocinio,
+			String sexo) {
 		System.out.println("Fue!");
+		try {
+
+			insertParticipante = con
+					.prepareStatement("INSERT INTO PARTICIPANTE VALUES (?,?,?,?)");
+			insertParticipante.setString(1, nome);
+			insertParticipante.setInt(2, anoNasc);
+			insertParticipante.setString(3, sexo);
+			insertParticipante.setString(4, patrocinio);
+
+			insertParticipante.executeUpdate();
+
+			insertParticipante.close();
+			con.close();
+
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		}
+
+	}
+
+	public void cadastraProva(String nome, int id) {
+		System.out.println("Fue!");
+
+		try {
+
+			insertProvaParticipante = con
+					.prepareStatement("INSERT INTO PARTICIPANTE_PROVA VALUES(?,?)");
+			insertProvaParticipante.setString(1, nome);
+			insertProvaParticipante.setInt(2, id);
+			insertProvaParticipante.executeUpdate();
+
+			insertProvaParticipante.close();
+			con.close();
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		}
+	}
+
+	public ResultSet listaParticipante(String nome) {
+		System.out.println("Fue!");
+		// Statement st = null;
+
+		String createProcedureExibeComp = "select SERIE_PARTICIPANTE.NOME_PARTIC_SP, SERIE_PARTICIPANTE.DATA_HORA_SP, SERIE.TIPO "
+				+ "from SERIE_PARTICIPANTE , SERIE "
+				+ "where SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA ";
+
+		String teste = "select PARTICIPANTE_PROVA.NOME_PARTIC_PP "
+				+ "from PARTICIPANTE_PROVA "
+				+ "where PARTICIPANTE_PROVA.NOME_PARTIC_PP = ? ";
+
+		try {
+
+			// st = con.createStatement();
+			// searchParticipante =
+			// con.prepareStatement("INSERT INTO PARTICIPANTE_PROVA VALUES(?,?)");
+			searchParticipante = con.prepareStatement(teste);
+			searchParticipante.setString(1, nome);
+			// insertProvaParticipante.setInt(2, id);
+			result = searchParticipante.executeQuery();
+			searchParticipante = con.prepareStatement(teste);
+			searchParticipante.close();
+			con.close();
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		}
+		return result;
+	}
+	
+	public ResultSet listarTop3() throws SQLException {
+
+		String createListarTop3 = "select SERIE_PARTICIPANTE.NOME_PARTIC_SP, serie_participante.data_hora_sp, serie_participante.tempo "
+				+ "from SERIE_PARTICIPANTE, SERIE, participante_prova,PROVA "
+				+ "where  SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA AND SERIE_PARTICIPANTE.NOME_PARTIC_SP = PARTICIPANTE_PROVA.NOME_PARTIC_PP AND PARTICIPANTE_PROVA.ID_PROVA_PP = PROVA.ID_PROVA "
+				+ "order by tempo";
+
+		Statement stmt = null;
+		ResultSet res;
+		stmt = con.createStatement();
+		res = stmt.executeQuery(createListarTop3);
+		return res;
+
+	}
+
+	public ResultSet listaParticipante2(int nome){
+		System.out.println("Fue!");
+		//Statement st = null;
+		
+		String createProcedureExibeComp = "select SERIE_PARTICIPANTE.NOME_PARTIC_SP, SERIE_PARTICIPANTE.DATA_HORA_SP, SERIE.TIPO " +
+				"from SERIE_PARTICIPANTE , SERIE " +
+				"where SERIE_PARTICIPANTE.DATA_HORA_SP = SERIE.DATA_HORA ";
+		
+		String teste = "select PARTICIPANTE_PROVA.NOME_PARTIC_PP " +
+				"from PARTICIPANTE_PROVA " +
+				"where PARTICIPANTE_PROVA.ID_PROVA_PP = ? ";
+		
+		
 		
 		try{
 			
-			insertProvaParticipante = con.prepareStatement("INSERT INTO PARTICIPANTE_PROVA VALUES(?,?)");
-			insertProvaParticipante.setString(1, nome);
-			insertParticipante.setInt(2, id);
-						 
-			insertParticipante.close();
+			//st = con.createStatement();
+			//searchParticipante = con.prepareStatement("INSERT INTO PARTICIPANTE_PROVA VALUES(?,?)");
+			searchParticipante = con.prepareStatement(teste);
+			searchParticipante.setInt(1, nome);
+			//insertProvaParticipante.setInt(2, id);
+			result = searchParticipante.executeQuery();
+			searchParticipante = con.prepareStatement(teste);	 
+			searchParticipante.close();
 			con.close();
 			
 		} catch (SQLException ex) {
 			System.err.println("SQLException: " + ex.getMessage());
 		}
+		return result;
 	}
 	
-	public void cadastraSerie(String tipo, Timestamp dataHora, int totalPartic, int totalParticEfet, int idProva) {
+	public void cadastraSerie(String tipo, Timestamp dataHora,int idProva) {
 		System.out.println("Fue!");
 		
 		try {
-		insertSerie = con.prepareStatement("INSERT INTO SERIE VALUES(?,?,?,?,?)");
-		insertSerie.setString(1, tipo);	
+		insertSerie = con.prepareStatement("INSERT INTO SERIE VALUES(?,?,?)");
+		insertSerie.setString(1, tipo);
+		//insertSerie.setString(2, dataHora);
 		insertSerie.setTimestamp(2, dataHora);
-		insertSerie.setInt(3, totalPartic);
-		insertSerie.setInt(4, totalParticEfet);
+		//insertSerie.setInt(3, totalPartic);
+		//insertSerie.setInt(4, totalParticEfet);
 		insertSerie.setInt(5,idProva);
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void cadastraSerie2(String tipo,int idProva) {
+		System.out.println("Fue!");
+		//insertParticipante = con.prepareStatement("INSERT INTO PARTICIPANTE VALUES (?,?,?)");
+		
+		try {
+		insertSerie = con.prepareStatement("INSERT INTO SERIES VALUES(?,?)");
+		insertSerie.setString(1, tipo);
+		//insertSerie.setDate(2,new Date (data));
+		insertSerie.setInt(2,idProva);
+		
+		insertSerie.executeUpdate();
+		//insertSerie.set
+		insertSerie.close();
+		con.close();
+
+		//insertSerie.setString(2, dataHora);
+		//insertSerie.setInt(3, totalPartic);
+		//insertSerie.setInt(4, totalParticEfet);
 		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -187,8 +357,7 @@ public class ManipulaBanco {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return rsTop3;
-				
+		return rsTop3;			
 		
 	}
 
